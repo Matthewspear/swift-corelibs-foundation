@@ -19,6 +19,12 @@ public enum NSEnergyFormatterUnit : Int {
 
 public class NSEnergyFormatter : NSFormatter {
     
+    public override init() {
+        self.unitStyle = NSFormattingUnitStyle.Medium
+        self.forFoodEnergyUse = false
+        super.init()
+    }
+    
     public required init?(coder: NSCoder) {
         NSUnimplemented()
     }
