@@ -23,7 +23,9 @@ class TestNSEnergyFormatter: XCTestCase {
         return [
             ("test_BasicConstruction", test_BasicConstruction),
             ("test_DefaultValues", test_DefaultValues),
-            ("test_StringFromValue", test_StringFromValue),
+            ("test_StringFromValueShort", test_StringFromValueShort),
+            ("test_StringFromValueMedium", test_StringFromValueMedium),
+            ("test_StringFromValueLong", test_StringFromValueLong),
             ("test_UnitStringFromValue", test_UnitStringFromValue)
         ]
     }
@@ -47,8 +49,70 @@ class TestNSEnergyFormatter: XCTestCase {
         XCTAssert(f.unitStyle == .Medium)
     }
     
-    func test_StringFromValue() {
+    func test_StringFromValueShort() {
         
+        let shortUnits: [NSEnergyFormatterUnit:String]
+            = [.Joule: "J", .Kilojoule: "kJ",
+               .Calorie: "cal", .Kilocalorie: "kcal"]
+        
+        let f = NSEnergyFormatter()
+        f.unitStyle = .Short
+        
+        let testNumber = 10.1
+        
+        for (input, result) in shortUnits {
+            
+            let expectedResult = String(testNumber) + result
+            XCTAssertEqual(f.stringFromValue(testNumber, unit: input), expectedResult)
+        }
+    }
+    
+    func test_StringFromValueMedium() {
+    
+        let valueResultMedium: [NSEnergyFormatterUnit:String]
+            = [.Joule: " J", .Kilojoule: " kJ",
+               .Calorie: " cal", .Kilocalorie: " kcal"]
+        
+        let f = NSEnergyFormatter()
+        f.unitStyle = .Medium
+        
+        let testNumber = 10.1
+        
+        for (input, result) in valueResultMedium {
+            
+            let expectedResult = String(testNumber) + result
+            XCTAssertEqual(f.stringFromValue(testNumber, unit: input), expectedResult)
+        }
+    }
+    
+    func test_StringFromValueLong() {
+        
+        let singularLong: [NSEnergyFormatterUnit:String]
+            = [.Joule: " joule", .Kilojoule: " kilojoule",
+               .Calorie: " calorie", .Kilocalorie: " kilocalorie"]
+        
+        let multipleLong: [NSEnergyFormatterUnit:String]
+            = [.Joule: " joules", .Kilojoule: " kilojoules",
+               .Calorie: " calories", .Kilocalorie: " kilocalories"]
+        
+        let f = NSEnergyFormatter()
+        f.unitStyle = .Long
+        
+        var testNumber = 1.0
+        
+        for (input, result) in singularLong {
+            
+            let expectedResult = String(testNumber) + result
+            XCTAssertEqual(f.stringFromValue(testNumber, unit: input), expectedResult)
+        }
+        
+        testNumber = 10.1
+        
+        for (input, result) in multipleLong {
+            
+            let expectedResult = String(testNumber) + result
+            XCTAssertEqual(f.stringFromValue(testNumber, unit: input), expectedResult)
+        }
     }
     
     func test_UnitStringFromValue() {

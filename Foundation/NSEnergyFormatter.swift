@@ -33,14 +33,34 @@ public class NSEnergyFormatter : NSFormatter {
     public var unitStyle: NSFormattingUnitStyle // default is NSFormattingUnitStyleMedium
     public var forFoodEnergyUse: Bool // default is NO; if it is set to YES, NSEnergyFormatterUnitKilocalorie may be “C” instead of “kcal"
     
+    private let singularUnit: [NSEnergyFormatterUnit:[NSFormattingUnitStyle: String]]
+        = [.Joule:[.Short: "J", .Medium: "J", .Long: "joule"],
+           .Kilojoule: [.Short: "kJ", .Medium : "kJ", .Long: "kilojoule"],
+           .Calorie: [.Short: "cal", .Medium : "cal", .Long: "calorie"],
+           .Kilocalorie: [.Short: "kcal", .Medium : "kcal", .Long: "kilocalorie"]]
+    
+    private let multipleUnits: [NSEnergyFormatterUnit:[NSFormattingUnitStyle: String]]
+        = [.Joule:[.Short: "J", .Medium: "J", .Long: "joules"],
+           .Kilojoule: [.Short: "kJ", .Medium : "kJ", .Long: "kilojoules"],
+           .Calorie: [.Short: "cal", .Medium : "cal", .Long: "calories"],
+           .Kilocalorie: [.Short: "kcal", .Medium : "kcal", .Long: "kilocalories"]]
+    
     // Format a combination of a number and an unit to a localized string.
-    public func stringFromValue(_ value: Double, unit: NSEnergyFormatterUnit) -> String { NSUnimplemented() }
+    public func stringFromValue(_ value: Double, unit: NSEnergyFormatterUnit) -> String {
+        
+        let unit = (value == 1) ? singularUnit[unit]![unitStyle]! : multipleUnits[unit]![unitStyle]!
+        
+        return "\(value)\(unitStyle != .Short ? " " : "")\(unit)"
+    }
     
     // Format a number in joules to a localized string with the locale-appropriate unit and an appropriate scale (e.g. 10.3J = 2.46cal in the US locale).
     public func stringFromJoules(_ numberInJoules: Double) -> String { NSUnimplemented() }
     
     // Return a localized string of the given unit, and if the unit is singular or plural is based on the given number.
-    public func unitStringFromValue(_ value: Double, unit: NSEnergyFormatterUnit) -> String { NSUnimplemented() }
+    public func unitStringFromValue(_ value: Double, unit: NSEnergyFormatterUnit) -> String {
+     
+        return "\(value == 1 ? singularUnit[unit]![unitStyle]! : multipleUnits[unit]![unitStyle]!)"
+    }
     
     // Return the locale-appropriate unit, the same unit used by -stringFromJoules:.
     public func unitStringFromJoules(_ numberInJoules: Double, usedUnit unitp: UnsafeMutablePointer<NSEnergyFormatterUnit>) -> String { NSUnimplemented() }
